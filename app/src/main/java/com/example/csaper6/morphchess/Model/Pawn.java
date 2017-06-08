@@ -1,59 +1,60 @@
-import com.example.csaper6.morphchess.Model.BoardLocation;
-import com.example.csaper6.morphchess.Model.ChessPiece;
-import java.util.ArrayList;
-import java.util.List;
+package com.example.csaper6.morphchess.Model;
 
-Queenpackage com.example.csaper6.morphchess.Model;
+import android.widget.ImageView;
 
 /**
  * Created by csaper6 on 4/19/17.
  */
 public class Pawn extends ChessPiece {
+    public boolean hasMoved;
 
-
-    public Pawn() {
+    public Pawn(boolean color, int x, int y, ImageView image) {
+        super(color, x, y, image);
+        hasMoved = false;
 
     }
 
-    @Override
-    BoardLocation move(BoardLocation newPos) {
-        List<BoardLocation> possibleMoves = possibleMoves();
-        for(int i = 0; i < possibleMoves.size(); i++) {
-            if(newPos == possibleMoves.get(i))
-                return newPos;
-        }
-        return null; //if not a valid board position
+    public boolean isHasMoved() {
+        return hasMoved;
     }
 
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
 
-    @Override
-    List<BoardLocation> possibleMoves() {
-        BoardLocation pos = getPosition();
-        List<BoardLocation> possibleMoves = new ArrayList<>();
-        int x = pos.getPosHorizontal();
-        int y = pos.getPosVertical();
-        for(int i = 1; i <= 8; i++){
-            BoardLocation temp = new BoardLocation(x,i);
-            possibleMoves.add(temp);
-            temp = new BoardLocation(i,y);
-            possibleMoves.add(temp);
-            temp = new BoardLocation(x+i,y+i);
-            if(!(temp.getPosHorizontal() < 1
-                    && temp.getPosHorizontal() > 8
-                    && temp.getPosVertical() < 1
-                    && temp.getPosVertical() > 8))
-                possibleMoves.add(temp);
-            temp = new BoardLocation(x-i,y-i);
-            if(!(temp.getPosHorizontal() < 1
-                    && temp.getPosHorizontal() > 8
-                    && temp.getPosVertical() < 1
-                    && temp.getPosVertical() > 8))
-                possibleMoves.add(temp);
+    public boolean isMovePossible(int x1, int y1, Board board) {
+        if (board.isOccupied(x1, y1)) {
+            if (board.getPiece(x1, y1).getColor() == color) //if the piece the pawn is trying to move on top of is friendly return false
+                return false;
+            if (color && y1 - y == 1 && x1 - x == 1) {
+                return true;//if player is playing black, then check the diagonals to the top left and right for enemy pieces
+            }
+            if (color && y1 - y == 1 && x1 - x == -1) {
+                return true;//if player is playing black, then check the diagonals to the top left and right for enemy pieces
+            }
 
+            if (!color && y - y1 == 1 && x1 - x == -1) {
+                return true;
+            }
 
+            if (!color && y - y1 == 1 & x1 - x == 1) {
+                return true;
+            }  //if player is playing white, then check the diagonals to the bottom left and right for enemy pieces
         }
 
-        return possibleMoves;
 
+        if (!hasMoved && color && y1 - y == 2 && x == x1) {//if pawn hasnt moved, 2 spots are available to move
+            return true;
+        }
+        if (!hasMoved && !color && y - y1 == 2 && x == x1) {
+            return true;
+        }
+        if (color && y1 - y == 1 && x == x1)
+            return true;
+        if (!color && y - y1 == 1 && x == x1)
+            return true;
+        return false; //if the move is impossible return false
     }
+
 }
+

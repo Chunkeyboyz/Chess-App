@@ -31,6 +31,12 @@ public class Board {
     }
 
     public ChessPiece[][] setPiece(int x, int y, ChessPiece piece){
+//        Log.d("ASDD", "setPiece: " + x + ", " + y + " : " + board[x][y]);
+//        if(board[x][y] != null){
+//            Log.d("ajfn", "setPiece: ;ojnga;ojb");
+//            ((FrameLayout)board[x][y].getImage().getParent()).removeView(board[x][y].getImage());
+//        }
+//        board[x][y] = null;
         board[x][y] = piece;
         return board;
     }
@@ -39,5 +45,19 @@ public class Board {
         if(board[x][y] == null)
             return false;
         return true;
+    } //sees if space is occupied, returns false if null
+
+    public ChessPiece[][] switchPiece(int x, int y, int x1, int y1){
+        ChessPiece piece = board[x1][y1];
+        board[x1][y1] = board[x][y];
+        board[x][y] = piece;
+        return board;
     }
+//    public boolean isInCheck(ChessPiece king) {
+//        for (int i = 0; i <= 7; i++)
+//            for (int j = 0; j <= 7; j++) {
+//                if(board[i][j].isMovePossible(king.getX(),king.getY(),
+//            }
+//        return false;
+//    }
 }
